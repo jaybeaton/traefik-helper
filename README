@@ -1,0 +1,13 @@
+Manage Traefik Docker container with docker-compose.
+
+Usage:
+traefik-helper.sh [ARGS...]
+
+[ARGS...] will be passed directly to docker-compose.
+
+Examples:
+traefik-helper.sh up -d  # Bring up Traefik Docker container.
+traefik-helper.sh start  # Start Traefik Docker container.
+traefik-helper.sh stop   # Stop Traefik Docker container.
+traefik-helper.sh down   # Bring down Traefik Docker container.
+
