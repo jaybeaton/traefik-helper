@@ -11,3 +11,10 @@ traefik-helper.sh start  # Start Traefik Docker container.
 traefik-helper.sh stop   # Stop Traefik Docker container.
 traefik-helper.sh down   # Bring down Traefik Docker container.
 
+
+A default traefik-helper.default.yml is provided.  You may copy this file to
+traefik-helper.yml and add or replace items as desired. Make sure to keep both
+networks sections in place with tokens.
+
+~NETWORK_LIST~ will be replaced by the list of current networks.
+~NETWORK_SECTION~ will be replaced by the proper networks section.

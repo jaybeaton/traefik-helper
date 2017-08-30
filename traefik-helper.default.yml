@@ -1,10 +1,10 @@
 # Default yml file for running Traefik.
 #
-# ~NETWORK_LIST~ will be replaced by list of networks.
-# ~NETWORK_SECTION~ will be replaced by proper networks section.
+# ~NETWORK_LIST~ will be replaced by the list of current networks.
+# ~NETWORK_SECTION~ will be replaced by the proper networks section.
 #
-# You may copy this file to traefik-helper.default.yml and add or replace items
-# as desired. Make sure to keep both networks sections in place with tokens.
+# You may copy this file to traefik-helper.yml and add or replace items as
+# desired. Make sure to keep both networks sections in place with tokens.
 
 version: '2'
 
