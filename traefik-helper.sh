@@ -1,6 +1,16 @@
 #!/bin/sh
 
-YML_FILE_LOCATION="/tmp/traefik.yml";
+CURRENTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+
+YML_TEMPLATE="$CURRENTDIR/traefik-helper.yml";
+YML_TEMPLATE_DEFAULT="$CURRENTDIR/traefik-helper.default.yml";
+
+if [ ! -e "$YML_TEMPLATE" ]; then
+  # Custom yml file not preset, use default.
+  YML_TEMPLATE="$YML_TEMPLATE_DEFAULT";
+fi
+
+YML_FILE_LOCATION="/tmp/traefik-helper.yml";
 TRAEFIC_COMMAND="docker-compose -f $YML_FILE_LOCATION";
 
 if [ "$1" = "" ] || [ "$1" = "-h" ] || [ "$1" = "help" ]; then
@@ -27,7 +37,7 @@ if [ "$NETWORKS" = "" ]; then
   exit 0;
 fi
 
-# Build yml file.
+# Build token replacements for the yml file.
 NETWORK_LIST='';
 NETWORK_SECTION='';
 for n in $NETWORKS
@@ -45,26 +55,13 @@ echo "---------------";
 echo "$NETWORKS";
 echo "";
 
-cat <<EOF > "$YML_FILE_LOCATION"
-version: '2'
+# Read the yml and replace tokens.
+YML=$(<"$YML_TEMPLATE");
+YML="${YML/~NETWORK_LIST~/${NETWORK_LIST}}";
+YML="${YML/~NETWORK_SECTION~/${NETWORK_SECTION}}";
 
-services:
-  traefik:
-    image: traefik
-    restart: unless-stopped
-    command: -c /dev/null --web --docker --logLevel=DEBUG
-    networks:
-${NETWORK_LIST}
-    ports:
-      - '80:80'
-      - '8080:8080'
-      - '8025:8025'
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
-networks:
-${NETWORK_SECTION}
-EOF
+# Write the yml file out.
+echo "$YML" > "$YML_FILE_LOCATION";
 
 # Run the docker-compose command with passed arguments.
 $TRAEFIC_COMMAND $@;
