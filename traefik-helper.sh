@@ -10,8 +10,9 @@ if [ ! -e "$YML_TEMPLATE" ]; then
   YML_TEMPLATE="$YML_TEMPLATE_DEFAULT";
 fi
 
+DOCKER_PROJECT_NAME="traefik_helper";
 YML_FILE_LOCATION="/tmp/traefik-helper.yml";
-TRAEFIC_COMMAND="docker-compose -f $YML_FILE_LOCATION";
+TRAEFIC_COMMAND="docker-compose -p $DOCKER_PROJECT_NAME -f $YML_FILE_LOCATION";
 
 if [ "$1" = "" ] || [ "$1" = "-h" ] || [ "$1" = "help" ]; then
   echo "Manage Traefik Docker container with docker-compose.
@@ -30,7 +31,7 @@ $0 down   # Bring down Traefik Docker container.";
 fi
 
 # Get all networks.
-NETWORKS=`docker network ls | grep '_default' | awk "{print \\$2}"`;
+NETWORKS=`docker network ls | grep '_default' | grep -v '${DOCKER_PROJECT_NAME}_default' | awk "{print \\$2}"`;
 
 if [ "$NETWORKS" = "" ]; then
   echo "**Error: No networks found. Start Docker containers first.";
@@ -57,8 +58,8 @@ echo "";
 
 # Read the yml and replace tokens.
 YML=$(<"$YML_TEMPLATE");
-YML="${YML/~NETWORK_LIST~/${NETWORK_LIST}}";
-YML="${YML/~NETWORK_SECTION~/${NETWORK_SECTION}}";
+YML="${YML//~NETWORK_LIST~/${NETWORK_LIST}}";
+YML="${YML//~NETWORK_SECTION~/${NETWORK_SECTION}}";
 
 # Write the yml file out.
 echo "$YML" > "$YML_FILE_LOCATION";
