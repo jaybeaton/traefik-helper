@@ -1,0 +1,53 @@
+# Sample yml file for running Traefik.
+#
+# This will run redis, mailhog, and portainer services that can be shared by
+# Docker services on all other networks.
+#
+# For example, you could run multiple PHP services for multiple sites and all
+# of them could use the same mailhog sevice.
+
+version: '2'
+
+services:
+  traefik:
+    image: traefik
+    restart: unless-stopped
+    command: -c /dev/null --web --docker --logLevel=DEBUG
+    networks:
+~NETWORK_LIST~
+    ports:
+      - '80:80'
+      - '8080:8080'
+      - '8025:8025'
+      - '9000:9000'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  redis:
+    image: wodby/redis:3.2-2.1.2
+    networks:
+~NETWORK_LIST~
+
+  mailhog:
+    image: mailhog/mailhog
+    networks:
+~NETWORK_LIST~
+    labels:
+      - 'traefik.backend=mailhog'
+      - 'traefik.port=8025'
+      - 'traefik.frontend.rule=Host:mailhog.drupal.docker.localhost'
+
+  portainer:
+    image: portainer/portainer
+    command: --no-auth
+    networks:
+~NETWORK_LIST~
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - 'traefik.backend=portainer'
+      - 'traefik.port=9000'
+      - 'traefik.frontend.rule=Host:portainer.drupal.docker.localhost'
+
+networks:
+~NETWORK_SECTION~
