@@ -6,11 +6,11 @@ YML_TEMPLATE="$CURRENTDIR/traefik-helper.yml";
 YML_TEMPLATE_DEFAULT="$CURRENTDIR/traefik-helper.default.yml";
 
 if [ ! -e "$YML_TEMPLATE" ]; then
-  # Custom yml file not preset, use default.
+  # Custom yml file not present, use default.
   YML_TEMPLATE="$YML_TEMPLATE_DEFAULT";
 fi
 
-DOCKER_PROJECT_NAME="traefik_helper";
+DOCKER_PROJECT_NAME="traefikhelper";
 YML_FILE_LOCATION="/tmp/traefik-helper.yml";
 TRAEFIC_COMMAND="docker-compose -p $DOCKER_PROJECT_NAME -f $YML_FILE_LOCATION";
 
