@@ -1,6 +1,12 @@
 #!/bin/sh
 
-CURRENTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+if ! [ -x "$(command -v realpath)" ]; then
+  # If realpath isn't present, use this instead.
+  # Note: This will not work correctly for symlinks.
+  CURRENTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+else
+  CURRENTDIR="$( dirname $( realpath "${BASH_SOURCE[0]}" ) )";
+fi
 
 YML_TEMPLATE="$CURRENTDIR/traefik-helper.yml";
 YML_TEMPLATE_DEFAULT="$CURRENTDIR/traefik-helper.default.yml";
