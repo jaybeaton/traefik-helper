@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if ! [ -x "$(command -v realpath)" ]; then
   # If realpath isn't present, use this instead.
