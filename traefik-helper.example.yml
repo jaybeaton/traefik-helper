@@ -10,7 +10,7 @@ version: '2'
 
 services:
   traefik:
-    image: traefik:v1.7.20
+    image: traefik:v1.7
     restart: unless-stopped
     command: -c /dev/null --web --docker --forwardingtimeouts.dialtimeout=0s --logLevel=DEBUG
     networks:
